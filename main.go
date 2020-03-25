@@ -137,6 +137,8 @@ func getExpirationDate() string {
 		minute = 45
 	} else if utcMinutes >= 10 { // 14th minute
 		minute = 30
+	} else if utcMinutes >= 0 { // 59th minute
+		minute = 15
 	}
 
 	if hour == 24 {
