@@ -11,7 +11,11 @@ import (
 )
 
 type RequestResponse struct {
-	Data Transaction `json:"data"`
+	Data   Transaction `json:"data"`
+	Errors []struct {
+		Code    string `json:"code"`
+		Message string `json:"message"`
+	} `json:"errors"`
 }
 
 func request(jwt string, form url.Values) error {
@@ -60,7 +64,15 @@ func request(jwt string, form url.Values) error {
 		return fmt.Errorf("can't unmarshal: %s", err.Error())
 	}
 
-	logger.Infof("transaction id: %d", result.Data.ID)
+	if len(result.Errors) > 0 {
+		for _, err := range result.Errors {
+			logger.Infof("response error code: '%s', message: '%s'", err.Code, err.Message)
+		}
+	}
+
+	if result.Data.ID != 0 {
+		logger.Infof("transaction id: %d", result.Data.ID)
+	}
 
 	return nil
 }

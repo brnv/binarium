@@ -22,6 +22,7 @@ func (transaction *Transaction) String() string {
 
 	if transaction.Status == 1 {
 		status = "in progress"
+		success = "in progress"
 	} else if transaction.Status == 2 {
 		status = "done"
 		if transaction.Income != 0 {
@@ -37,11 +38,12 @@ func (transaction *Transaction) String() string {
 	result := fmt.Sprintf(
 		"ID: %d\n"+
 			"Asset: %s\n"+
+			"Sum: %f\n"+
 			"Status: %s\n"+
 			"Success: %s\n"+
 			"Income: %f\n"+
 			"Profit: %f",
-		transaction.ID, asset, status, success,
+		transaction.ID, asset, transaction.Sum, status, success,
 		transaction.Income, profit,
 	)
 

@@ -11,10 +11,10 @@ func decompressIfGzipped(input []byte) []byte {
 
 	reader, err := gzip.NewReader(bytes.NewReader(input))
 	if err != nil {
-		logger.Infof("reader error: '%s', not gzipped", err.Error())
+		logger.Infof("can't create reader: '%s', not gzipped", err.Error())
 		output = input
 	} else {
-		logger.Info("no reader errors, gzipped")
+		logger.Info("reader ready, gzipped")
 		output, _ = ioutil.ReadAll(reader)
 	}
 
