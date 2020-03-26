@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/kovetskiy/godocs"
@@ -15,12 +16,13 @@ var (
 	version = "[manual build]"
 )
 
-const usage = `name
+const usage = `binarium
 
 Usage:
-    name --login --email <string> --password <string>
-    name [options]
-    name -h | --help
+    binarium --login --email <string> --password <string>
+    binarium --asset <string> --sum <string> [options]
+    binarium --check-id <string> [options]
+    binarium -h | --help
 
 Options:
     --login               Login.
@@ -28,9 +30,10 @@ Options:
     --password <string>   Password.
     --asset <string>      Asset.
     --sum <string>        Transaction price.
-    --jwt <string>        Auth token.
     --up                  Set option up.
     --down                Set option down.
+    --check-id <string>   Check option id.
+    --jwt <string>        Auth token.
     --dry-run             Dry run.
     --debug               Enable debug output.
     --trace               Enable trace output.
@@ -82,6 +85,24 @@ func main() {
 		optionSum = args["--sum"].(string)
 	}
 
+	jwt := optionJWT
+
+	if args["--check-id"] != nil {
+		transactionID, err := strconv.Atoi(args["--check-id"].(string))
+		if err != nil {
+			logger.Fatal(err)
+		}
+
+		transaction, err := findTransaction(jwt, transactionID)
+		if err != nil {
+			logger.Fatal(err)
+		}
+
+		logger.Infof("%s", transaction.String())
+
+		os.Exit(0)
+	}
+
 	optionUp := args["--up"].(bool)
 	optionDown := args["--down"].(bool)
 	kind := ""
@@ -103,7 +124,6 @@ func main() {
 		logger.Fatal("no such asset")
 	}
 
-	jwt := optionJWT
 	sum := optionSum
 	expirationDate := getExpirationDate()
 
@@ -177,11 +197,22 @@ func getExpirationDate() string {
 }
 
 func printForm(form url.Values) {
-	logger.Infof("option[asset]: %s", form.Get("option[asset]"))
-	logger.Infof("option[currency]: %s", form.Get("option[currency]"))
-	logger.Infof("option[expiration][date]: %s", form.Get("option[expiration][date]"))
-	logger.Infof("option[expiration][type]: %s", form.Get("option[expiration][type]"))
-	logger.Infof("option[kind]: %s", form.Get("option[kind]"))
-	logger.Infof("option[source]: %s", form.Get("option[source]"))
-	logger.Infof("option[sum]: %s", form.Get("option[sum]"))
+	info := fmt.Sprintf(
+		"option[asset]: %s\n"+
+			"option[currency]: %s\n"+
+			"option[expiration][date]: %s\n"+
+			"option[expiration]type]: %s\n"+
+			"option[kind]: %s\n"+
+			"option[source]: %s\n"+
+			"option[sum]: %s",
+		form.Get("option[asset]"),
+		form.Get("option[currency]"),
+		form.Get("option[expiration][date]"),
+		form.Get("option[expiration][type]"),
+		form.Get("option[kind]"),
+		form.Get("option[source]"),
+		form.Get("option[sum]"),
+	)
+
+	logger.Info(info)
 }

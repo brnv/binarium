@@ -10,6 +10,10 @@ import (
 	"strings"
 )
 
+type RequestResponse struct {
+	Data Transaction `json:"data"`
+}
+
 func request(jwt string, form url.Values) error {
 	request, err := http.NewRequest(
 		"POST",
@@ -48,7 +52,7 @@ func request(jwt string, form url.Values) error {
 
 	responseBody := decompressIfGzipped(responseRaw)
 
-	result := make(map[string]interface{})
+	result := RequestResponse{}
 
 	err = json.Unmarshal(responseBody, &result)
 	if err != nil {
@@ -56,7 +60,7 @@ func request(jwt string, form url.Values) error {
 		return fmt.Errorf("can't unmarshal: %s", err.Error())
 	}
 
-	logger.Info(result)
+	logger.Infof("transaction id: %d", result.Data.ID)
 
 	return nil
 }
