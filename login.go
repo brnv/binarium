@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -63,5 +64,29 @@ func login(email string, password string) (string, error) {
 		return "", fmt.Errorf("can't unmarshal: %s", err.Error())
 	}
 
+	if result.Data.Token != "" {
+		err = saveToken(result.Data.Token)
+		if err != nil {
+			return result.Data.Token, err
+		}
+	}
+
 	return result.Data.Token, nil
+}
+
+func saveToken(token string) error {
+	path := "/home/operator/.cache/binarium"
+
+	err := os.MkdirAll(path, 0777)
+	if err != nil {
+		return err
+	}
+
+	filePath := path + "/token"
+
+	ioutil.WriteFile(filePath, []byte(token), 0644)
+
+	logger.Infof("token saved to file %s", filePath)
+
+	return nil
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/url"
 	"os"
 	"strconv"
@@ -86,6 +87,19 @@ func main() {
 	}
 
 	jwt := optionJWT
+
+	if jwt == "" {
+		jwtByte, err := ioutil.ReadFile("/home/operator/.cache/binarium/token")
+		if err != nil {
+			logger.Fatal(err)
+		}
+
+		jwt = string(jwtByte)
+	}
+
+	if jwt == "" {
+		logger.Fatal("no auth token provided")
+	}
 
 	if args["--check-id"] != nil {
 		transactionID, err := strconv.Atoi(args["--check-id"].(string))
