@@ -31,6 +31,37 @@ var assets = map[string]string{
 	"GBP/NZD": "38",
 	"NZD/CAD": "39",
 	"NZD/CHF": "40",
+
+	"EURUSD": "1",
+	"USDJPY": "2",
+	"AUDUSD": "3",
+	"USDCAD": "4",
+	"EURGBP": "7",
+	"GBPUSD": "8",
+	"NZDUSD": "10",
+
+	"USDCHF": "11",
+	"GBPJPY": "13",
+	"GBPCHF": "14",
+	"AUDCHF": "15",
+	"EURCAD": "16",
+	"AUDJPY": "17",
+	"CADJPY": "18",
+	"AUDNZD": "19",
+	"EURAUD": "20",
+
+	"GBPCAD": "21",
+	"NZDJPY": "22",
+	"AUDCAD": "23",
+	"EURNZD": "24",
+	"EURCHF": "25",
+
+	"CADCHF": "35",
+	"CHFJPY": "36",
+	"GBPAUD": "37",
+	"GBPNZD": "38",
+	"NZDCAD": "39",
+	"NZDCHF": "40",
 }
 
 var assetsReverse = map[int]string{
