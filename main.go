@@ -58,12 +58,10 @@ func main() {
 		email := args["--email"].(string)
 		password := args["--password"].(string)
 
-		token, err := login(email, password)
+		_, err := login(email, password)
 		if err != nil {
 			logger.Fatal(err)
 		}
-
-		logger.Info(token)
 
 		os.Exit(0)
 	}
