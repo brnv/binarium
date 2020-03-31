@@ -13,6 +13,11 @@ type FilterResponse struct {
 	Data []Transaction `json:"data"`
 }
 
+var (
+	filterTypeBinary  = "2"
+	filterCurrencyUSD = "1"
+)
+
 func findTransaction(jwt string, id int) (Transaction, error) {
 	form := url.Values{}
 
@@ -29,14 +34,14 @@ func findTransaction(jwt string, id int) (Transaction, error) {
 		"%d-%02d-%02dT23:59:59Z",
 		timeNow.Year(),
 		timeNow.Month(),
-		timeNow.Day()+1,
+		timeNow.Day(),
 	)
 
-	form.Add("filter[type]", "2") // binary, not turbo
+	form.Add("filter[type]", filterTypeBinary)
 	form.Add("filter[asset]", "")
 	form.Add("filter[createdAt][from]", filterCreatedAtFrom)
 	form.Add("filter[createdAt][to]", filterCreatedAtTo)
-	form.Add("filter[currency]", "1")
+	form.Add("filter[currency]", filterCurrencyUSD)
 
 	printTransactionForm(form)
 
