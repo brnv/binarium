@@ -18,6 +18,10 @@ type RequestResponse struct {
 	} `json:"errors"`
 }
 
+var (
+	errorCodeLoginRequired = "d41d8cd98f00b204e9800998ecf8427e"
+)
+
 func request(jwt string, form url.Values) error {
 	request, err := http.NewRequest(
 		"POST",
@@ -66,6 +70,10 @@ func request(jwt string, form url.Values) error {
 
 	if len(result.Errors) > 0 {
 		for _, err := range result.Errors {
+			if err.Code == errorCodeLoginRequired {
+				logger.Infof("bad authentication, login required")
+			}
+
 			logger.Infof("response error code: '%s', message: '%s'", err.Code, err.Message)
 		}
 	}
