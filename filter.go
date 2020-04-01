@@ -25,9 +25,9 @@ func findTransaction(jwt string, id int) (Transaction, error) {
 
 	filterCreatedAtFrom := fmt.Sprintf(
 		"%d-%02d-%02d",
-		timeNow.Year(),
-		timeNow.Month(),
-		timeNow.Day()-1,
+		timeNow.Add(-1*time.Hour*24).Year(),
+		timeNow.Add(-1*time.Hour*24).Month(),
+		timeNow.Add(-1*time.Hour*24).Day(),
 	)
 
 	filterCreatedAtTo := fmt.Sprintf(
